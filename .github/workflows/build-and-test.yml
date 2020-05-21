@@ -1,0 +1,27 @@
+name: Rust
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install nightly toolchain
+        run: rustup toolchain install nightly-2020-05-15 --force
+      - name: Update rustup
+        run: rustup self update
+      - name: Set nightly toolchain
+        run: rustup default nightly-2020-05-15
+      - name: Add clippy component
+        run: rustup component add clippy
+      - name: Linting
+        run: cargo clippy -- -D warnings
+      - name: Build
+        run: cargo build --verbose
+      - name: Run tests
+        run: cargo test --verbose
